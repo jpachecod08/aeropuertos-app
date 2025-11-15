@@ -1,65 +1,123 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useAirportStore } from '@/stores/airportStore';
+import { AirportTable } from '@/components/AirportTable';
+import { AirportCard } from '@/components/AirportCard';
+import { SearchBar } from '@/components/SearchBar';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+
+type ViewMode = 'table' | 'cards';
 
 export default function Home() {
+  const { airports, loading, error, fetchAirports, darkMode, toggleDarkMode } = useAirportStore();
+  const [viewMode, setViewMode] = useState<ViewMode>('table');
+
+  useEffect(() => {
+    fetchAirports(1);
+  }, [fetchAirports]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded dark:bg-red-900 dark:border-red-700 dark:text-red-200">
+            <strong>Error:</strong> {error}
+            <br />
+            <span className="text-sm">Verifica tu conexión a internet y que la API key sea válida.</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    // FORZAR estilos explícitamente
+    <div 
+      className="min-h-screen transition-colors" 
+      style={{
+        backgroundColor: darkMode ? '#1f2937' : '#ffffff',
+        color: darkMode ? 'white' : 'black'
+      }}
+    >
+      <div className="max-w-7xl mx-auto p-4">
+        {/* Header */}
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <h1 
+            className="text-3xl font-bold"
+            style={{ color: darkMode ? 'white' : 'black' }}
+          >
+            ✈️ Aeropuertos del Mundo
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+          <div className="flex gap-2">
+            {/* Selector de vista */}
+            <div 
+              className="flex rounded-lg p-1"
+              style={{ backgroundColor: darkMode ? '#374151' : '#e5e7eb' }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <button
+                onClick={() => setViewMode('table')}
+                style={{
+                  backgroundColor: viewMode === 'table' ? (darkMode ? '#4b5563' : 'white') : 'transparent',
+                  color: viewMode === 'table' ? (darkMode ? 'white' : 'black') : (darkMode ? '#d1d5db' : '#374151')
+                }}
+                className="px-3 py-1 rounded-md transition-colors"
+              >
+                Tabla
+              </button>
+              <button
+                onClick={() => setViewMode('cards')}
+                style={{
+                  backgroundColor: viewMode === 'cards' ? (darkMode ? '#4b5563' : 'white') : 'transparent',
+                  color: viewMode === 'cards' ? (darkMode ? 'white' : 'black') : (darkMode ? '#d1d5db' : '#374151')
+                }}
+                className="px-3 py-1 rounded-md transition-colors"
+              >
+                Tarjetas
+              </button>
+            </div>
+            
+            {/* Botón modo oscuro */}
+            <button
+              onClick={toggleDarkMode}
+              style={{
+                backgroundColor: darkMode ? '#374151' : '#e5e7eb',
+                color: darkMode ? '#d1d5db' : '#374151'
+              }}
+              className="px-4 py-2 rounded-lg transition-colors"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+              {darkMode ? '☀️ Claro' : '🌙 Oscuro'}
+            </button>
+          </div>
+        </header>
+
+        {/* Barra de búsqueda */}
+        <SearchBar />
+
+        {/* Contenido principal */}
+        <main>
+          {loading ? (
+            <LoadingSpinner />
+          ) : viewMode === 'table' ? (
+            <AirportTable airports={airports} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {airports.map((airport) => (
+                <AirportCard key={airport.airport_id} airport={airport} />
+              ))}
+            </div>
+          )}
+        </main>
+
+        {/* Información de la API */}
+        <footer 
+          className="mt-8 text-center text-sm"
+          style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}
+        >
+          <p>Base de datos de aeropuertos global</p>
+          <p>Mostrando {airports.length} aeropuertos</p>
+        </footer>
+      </div>
     </div>
   );
 }
