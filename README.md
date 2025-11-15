@@ -27,3 +27,7 @@ Aplicación web construida con Next.js para explorar aeropuertos alrededor del m
 2. Instala dependencias: `npm install`
 3. Crea un archivo `.env.local` con tu API key de Aviationstack:
 4. Corre en local con `npm run dev`
+
+## Version subida a netlify
+
+https://whimsical-blancmange-e8006b.netlify.app/
