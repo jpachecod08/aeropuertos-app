@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+  functions = "netlify/functions"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[context.production.environment]
+  NEXT_PUBLIC_AVIATIONSTACK_API_KEY = "386042815c472befa4f015dc5ca6c7ce"
+  NEXT_PUBLIC_RAPIDAPI_KEY = "TU_KEY"

@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',  // ← ESTA LÍNEA ES CLAVE
+  trailingSlash: true,
+  images: {
+    unoptimized: true  // ← Necesario para exportación estática
+  }
+}
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+export default nextConfig

@@ -349,21 +349,20 @@ export const aviationApi = {
   },
 
   async getAirportById(id: string): Promise<Airport> {
-    try {
-      const allAirports = await this.getAllAirports();
-      const airport = allAirports.find(a => 
-        a.iata_code === id.toUpperCase() || 
-        a.icao_code === id.toUpperCase() ||
-        a.id === id
-      );
-      
-      if (airport) {
-        return airport;
-      }
-      throw new Error(`Aeropuerto "${id}" no encontrado`);
-    } catch (error) {
-      console.error('❌ Error buscando aeropuerto por ID:', error);
-      throw error;
+  try {
+    const allAirports = await this.getAllAirports();
+    const airport = allAirports.find(a => 
+      (a.iata_code && a.iata_code.toUpperCase() === id.toUpperCase()) ||  // ← CORREGIDO
+      (a.icao_code && a.icao_code.toUpperCase() === id.toUpperCase()) ||  // ← CORREGIDO
+      a.id === id
+    );
+    
+    if (airport) {
+      return airport;
     }
-  },
+    throw new Error(`Aeropuerto "${id}" no encontrado`);
+  } catch (error) {
+    console.error('❌ Error buscando aeropuerto por ID:', error);
+    throw error;
+  }
 };

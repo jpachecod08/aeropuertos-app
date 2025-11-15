@@ -71,7 +71,7 @@ export const AirportTable = ({ airports }: AirportTableProps) => {
                     {airport.icao_code || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                    {airport.city_iata_code || 'N/A'}
+                    {airport.city_iata_code || airport.city || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     {airport.country_name}
